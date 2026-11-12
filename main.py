@@ -52,6 +52,7 @@ def captura_dados():
         By.XPATH, '//*[@id="__next"]/div/main/div[3]/div[1]/div[1]/div[3]/div/div/ol/li[1]/div/article/div[3]/div/div[1]/span').text
     nome_local = driver.find_element(
         By.XPATH, '//*[@id="__next"]/div/main/div[3]/div[1]/div[1]/div[3]/div/div/ol/li[1]/div/article/div[2]/section/h2/button/span')
+    nome_hotel = nome_local.text
     nome_local.click()
     avaliacao = driver.find_element(
         By.XPATH, '//*[@id="tab-list-REVIEW"]/span')
@@ -59,7 +60,7 @@ def captura_dados():
     primeira_avaliacao = driver.find_element(
         By.XPATH, '//*[@id="tab-content-REVIEW"]/div/div/div/section/div[2]/div/blockquote').text
 
-    print(f'Nome do hotel: {nome_local}')
+    print(f'Nome do hotel: {nome_hotel}')
     print(f'Valor: {valor_local}')
     print(f'Primeira avaliação: {primeira_avaliacao}')
 
