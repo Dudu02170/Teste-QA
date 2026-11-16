@@ -1,0 +1,12 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>Fixture QA de hotéis</title>
+<h1>Busca de hotéis — fixture local</h1>
+<form id="search"><input id="input-auto-complete" required aria-label="Destino"><button data-testid="search-button">Pesquisar</button></form>
+<label>Ordenar<select id="sorting-selector"><option>Recomendados</option><option>Avaliação e sugestões</option></select></label>
+<div id="results"></div>
+<script>
+const hotels=[{city:'Manaus',name:'Hotel QA Centro',rating:8.2,price:250},{city:'Manaus',name:'Hotel QA Rio',rating:9.4,price:320}];
+let rows=[];
+function render(){document.querySelector('#results').innerHTML=rows.map(h=>'<article data-testid="hotel-card"><h2 data-testid="hotel-name">'+h.name+'</h2><span data-testid="hotel-rating">'+h.rating+'</span><span data-testid="hotel-price">R$ '+h.price.toFixed(2).replace('.',',')+'</span></article>').join('');}
+document.querySelector('#search').onsubmit=e=>{e.preventDefault();const city=document.querySelector('input').value;rows=hotels.filter(h=>h.city.toLowerCase()===city.toLowerCase());render();};
+document.querySelector('select').onchange=e=>{if(e.target.selectedIndex===1)rows.sort((a,b)=>b.rating-a.rating);render();};
+</script></html>
