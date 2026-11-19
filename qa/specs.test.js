@@ -28,3 +28,19 @@ scenario('buscas consecutivas substituem resultados e permitem recuperar apos va
  assert.equal(await p.driver.executeScript('return document.querySelectorAll("[data-testid=no-results]").length'),0);
  assert.deepEqual(await page.firstHotel(),{name:'Hotel QA Centro',rating:'8.2',price:'R$ 250,00'});
 });
+
+scenario('busca atrasada aguarda substituicao sem aceitar resultados anteriores',async p=>{
+ await p.open('/qa/fixtures/hotels.html?delay=250');
+ const page=new HotelsPage(p.driver);
+ const completed=async()=>assert.equal(
+  await p.driver.executeScript('return document.getElementById("results").getAttribute("aria-busy")'),'false',
+  'Page Object só deve concluir após a nova busca terminar');
+ assert.equal(await page.search('Manaus'),'results');await completed();
+ assert.deepEqual(await page.firstHotel(),{name:'Hotel QA Centro',rating:'8.2',price:'R$ 250,00'});
+ assert.equal(await page.search('Cidade inexistente'),'empty');await completed();
+ assert.equal(await p.driver.executeScript('return document.querySelectorAll("[data-testid=hotel-card]").length'),0,
+  'cartões antigos não podem satisfazer uma busca vazia pendente');
+ assert.equal(await page.search('Manaus'),'results');await completed();
+ assert.equal(await p.driver.executeScript('return document.querySelectorAll("[data-testid=no-results]").length'),0);
+ assert.deepEqual(await page.firstHotel(),{name:'Hotel QA Centro',rating:'8.2',price:'R$ 250,00'});
+});
